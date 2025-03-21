@@ -134,6 +134,7 @@ spec:
     - name: foundry-30000
       protocol: TCP
       port: 30000
+      targetPort: 30000
   type: ExternalName
   externalName: 192.168.10.51
 ---
