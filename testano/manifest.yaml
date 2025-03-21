@@ -29,7 +29,7 @@ metadata:
   namespace: nas
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # Remark this entry if you only have a HTTP port connection to external webserver
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
   rules:
