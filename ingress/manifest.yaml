@@ -271,8 +271,6 @@ metadata:
   name: unifids
   namespace: rp-ingress
 spec:
-  ipFamilies:
-  - IPv4
   ports:   
     - name: unifids-8443
       protocol: TCP
