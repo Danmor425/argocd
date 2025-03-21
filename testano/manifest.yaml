@@ -29,11 +29,11 @@ metadata:
   namespace: nas
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # Remark this entry if you only have a HTTP port connection to external webserver
-    #cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   ingressClassName: nginx
   rules:
-  - host: nas.danmor.eu 
+  - host: home.danmor.eu 
     http:
       paths:
       - path: /
@@ -43,7 +43,7 @@ spec:
             name: nas-service-v4 # make sure this is same service name as in the service yaml
             port:
               number: 5001 
-  #tls: # < placing a host in the TLS config will indicate a cert should be created
-  #- hosts:
-    #-  nas.danmor.eu
-    #EsecretName: nas.mydomain.com-tls # < cert-manager will store the created certificate in this secret.
+  tls: # < placing a host in the TLS config will indicate a cert should be created
+  - hosts:
+    -  home.danmor.eu
+    secretName: home.danmor.eu-tls # < cert-manager will store the created certificate in this secret.
