@@ -25,7 +25,6 @@ metadata:
   name: home-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # Remark this entry if you only have a HTTP port connection to external webserver
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -65,7 +64,6 @@ metadata:
   name: deluge-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -104,7 +102,6 @@ metadata:
   name: drive-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -180,7 +177,6 @@ metadata:
   name: hass-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -219,7 +215,6 @@ metadata:
   name: sonarr-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -258,7 +253,6 @@ metadata:
   name: unifi-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -297,7 +291,6 @@ metadata:
   name: unifids-ingress
   namespace: rp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
