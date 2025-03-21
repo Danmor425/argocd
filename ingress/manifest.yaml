@@ -90,6 +90,258 @@ spec:
     -  deluge.danmor.eu
     secretName: deluge.danmor.eu-tls
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  name: drive
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: drive-443
+      protocol: TCP
+      port: 443
+spec:
+  type: ExternalName
+  externalName: 192.168.10.51
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drive-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: drive.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 443
+  tls:
+  - hosts:
+    -  drive.danmor.eu
+    secretName: drive.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foundry
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: foundry-30000
+      protocol: TCP
+      port: 30000
+spec:
+  type: ExternalName
+  externalName: 192.168.10.51
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: foundry-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: foundry.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 30000
+  tls:
+  - hosts:
+    -  foundry.danmor.eu
+    secretName: foundry.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hass
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: hass-8123
+      protocol: TCP
+      port: 8123
+spec:
+  type: ExternalName
+  externalName: 192.168.10.55
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hass-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hass.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 8123
+  tls:
+  - hosts:
+    -  hass.danmor.eu
+    secretName: hass.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sonarr
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: sonarr-8989
+      protocol: TCP
+      port: 8989
+spec:
+  type: ExternalName
+  externalName: 192.168.10.51
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarr-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: sonarr.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 8989
+  tls:
+  - hosts:
+    -  sonarr.danmor.eu
+    secretName: sonarr.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: unifi
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: unifi-443
+      protocol: TCP
+      port: 443
+spec:
+  type: ExternalName
+  externalName: 192.168.10.1
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifi-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: unifi.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 443
+  tls:
+  - hosts:
+    -  unifi.danmor.eu
+    secretName: unifi.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: unifids
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: unifids-8443
+      protocol: TCP
+      port: 8443
+spec:
+  type: ExternalName
+  externalName: 192.168.10.51
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifids-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: unifids.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 8443
+  tls:
+  - hosts:
+    -  unifids.danmor.eu
+    secretName: unifids.danmor.eu-tls
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
