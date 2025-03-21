@@ -1,3 +1,95 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rp-ingress
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: home
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:
+    - name: home-5000   
+      protocol: TCP 
+      port: 5000       
+    - name: home-5001   
+      protocol: TCP
+      port: 5001       
+spec:
+  type: ExternalName
+  externalName: 192.168.10.51
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # Remark this entry if you only have a HTTP port connection to external webserver
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: home.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix  # pathType no longer has a default value in v1; "Exact", "Prefix", or "ImplementationSpecific" must be specified
+        backend:
+          service:
+            name: home # make sure this is same service name as in the service yaml
+            port:
+              number: 5001 
+  tls:
+  - hosts:
+    -  home.danmor.eu
+    secretName: home.danmor.eu-tls # < cert-manager will store the created certificate in this secret.
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: deluge
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: deluge-8112
+      protocol: TCP
+      port: 8112
+spec:
+  type: ExternalName
+  externalName: 192.168.10.51
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deluge-ingress
+  namespace: rp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: deluge.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 8112
+  tls:
+  - hosts:
+    -  deluge.danmor.eu
+    secretName: deluge.danmor.eu-tls
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
