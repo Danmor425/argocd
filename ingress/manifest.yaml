@@ -25,6 +25,7 @@ metadata:
   name: home-ingress
   namespace: rp-ingress
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -102,6 +103,7 @@ metadata:
   name: drive-ingress
   namespace: rp-ingress
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -253,6 +255,7 @@ metadata:
   name: unifi-ingress
   namespace: rp-ingress
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
@@ -291,6 +294,7 @@ metadata:
   name: unifids-ingress
   namespace: rp-ingress
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
