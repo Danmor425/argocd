@@ -166,7 +166,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: deluge
+            name: foundry
             port:
               number: 30000
   tls:
