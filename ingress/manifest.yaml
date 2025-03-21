@@ -6,29 +6,18 @@ metadata:
 kind: Service
 apiVersion: v1
 metadata:
-  name: synology
-  namespace: rp-ingress  
+  name: home
+  namespace: rp-ingress
 spec:
+  ports:
+    - name: home-5000   
+      protocol: TCP 
+      port: 5000       
+    - name: home-5001   
+      protocol: TCP
+      port: 5001       
   type: ExternalName
   externalName: 192.168.10.51
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: hass
-  namespace: rp-ingress  
-spec:
-  type: ExternalName
-  externalName: 192.168.10.55
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: unifi
-  namespace: rp-ingress  
-spec:
-  type: ExternalName
-  externalName: 192.168.10.1
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -48,13 +37,26 @@ spec:
         pathType: Prefix  # pathType no longer has a default value in v1; "Exact", "Prefix", or "ImplementationSpecific" must be specified
         backend:
           service:
-            name: synology # make sure this is same service name as in the service yaml
+            name: home # make sure this is same service name as in the service yaml
             port:
               number: 5001 
   tls:
   - hosts:
     -  home.danmor.eu
     secretName: home.danmor.eu-tls # < cert-manager will store the created certificate in this secret.
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: deluge
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: deluge-8112
+      protocol: TCP
+      port: 8112
+  type: ExternalName
+  externalName: 192.168.10.51
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -64,9 +66,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header Upgrade "websocket";
-      proxy_set_header Connection "Upgrade";
 spec:
   ingressClassName: nginx
   rules:
@@ -77,13 +76,26 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: synology
+            name: deluge
             port:
               number: 8112
   tls:
   - hosts:
     -  deluge.danmor.eu
     secretName: deluge.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: drive
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: drive-443
+      protocol: TCP
+      port: 443
+  type: ExternalName
+  externalName: 192.168.10.51
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -103,13 +115,26 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: synology
+            name: drive
             port:
               number: 443
   tls:
   - hosts:
     -  drive.danmor.eu
     secretName: drive.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foundry
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: foundry-30000
+      protocol: TCP
+      port: 30000
+  type: ExternalName
+  externalName: 192.168.10.51
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -119,9 +144,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header Upgrade "websocket";
-      proxy_set_header Connection "Upgrade";
 spec:
   ingressClassName: nginx
   rules:
@@ -132,13 +154,26 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: synology
+            name: foundry
             port:
               number: 30000
   tls:
   - hosts:
     -  foundry.danmor.eu
     secretName: foundry.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hass
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: hass-8123
+      protocol: TCP
+      port: 8123
+  type: ExternalName
+  externalName: 192.168.10.55
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -166,6 +201,19 @@ spec:
     -  hass.danmor.eu
     secretName: hass.danmor.eu-tls
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sonarr
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: sonarr-8989
+      protocol: TCP
+      port: 8989
+  type: ExternalName
+  externalName: 192.168.10.51
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -184,13 +232,26 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: synology
+            name: sonarr
             port:
               number: 8989
   tls:
   - hosts:
     -  sonarr.danmor.eu
     secretName: sonarr.danmor.eu-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: unifi
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: unifi-443
+      protocol: TCP
+      port: 443
+  type: ExternalName
+  externalName: 192.168.10.1
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -218,6 +279,19 @@ spec:
     -  unifi.danmor.eu
     secretName: unifi.danmor.eu-tls
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  name: unifids
+  namespace: rp-ingress
+spec:
+  ports:   
+    - name: unifids-8443
+      protocol: TCP
+      port: 8443
+  type: ExternalName
+  externalName: 192.168.10.51
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -236,7 +310,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: synology
+            name: unifids
             port:
               number: 8443
   tls:
@@ -264,16 +338,3 @@ spec:
                 name: argocd-server
                 port:
                   number: 443
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: unifids
-  namespace: rp-ingress
-spec:
-  ports:   
-    - name: unifids-8443
-      protocol: TCP
-      port: 8443
-  type: ExternalName
-  externalName: 192.168.10.51
