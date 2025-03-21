@@ -55,6 +55,7 @@ spec:
     - name: deluge-8112
       protocol: TCP
       port: 8112
+      targetPort: 8112
   type: ExternalName
   externalName: 192.168.10.51
 ---
