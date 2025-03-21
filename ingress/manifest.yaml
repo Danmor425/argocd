@@ -264,3 +264,18 @@ spec:
                 name: argocd-server
                 port:
                   number: 443
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: unifids
+  namespace: rp-ingress
+spec:
+  ipFamilies:
+  - IPv4
+  ports:   
+    - name: unifids-8443
+      protocol: TCP
+      port: 8443
+  type: ExternalName
+  externalName: 192.168.10.51
