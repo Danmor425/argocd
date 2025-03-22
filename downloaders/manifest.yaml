@@ -280,7 +280,7 @@ spec:
       claimName: sonarr-config-claim
   - name: downloads
     persistentVolumeClaim:
-      claimName: sonarr-downloads
+      claimName: deluge-downloads
   - name: tvseries
     persistentVolumeClaim:
       claimName: sonarr-tvseries
