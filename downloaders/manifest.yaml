@@ -22,6 +22,22 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  name: tvseries
+  namespace: downloaders
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/volume1/tvseries/"
+    server: "192.168.10.51"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
   name: deluge-config
   namespace: downloaders
 spec:
@@ -176,3 +192,108 @@ spec:
     - name: prowlarr-9696
       protocol: TCP
       port: 9696
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sonarr-config
+  namespace: downloaders
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/volume1/kube/config/sonarr/"
+    server: "192.168.10.51"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-config-claim
+  namespace: downloaders
+spec:
+  volumeName: sonarr-config
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-downloads
+  namespace: downloaders
+spec:
+  volumeName: downloads
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-tvseries
+  namespace: downloaders
+spec:
+  volumeName: tvseries
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sonarr
+  labels:
+    app.kubernetes.io/name: sonarr
+spec:
+  containers:
+  - name: sonarr
+    image: lscr.io/linuxserver/sonarr:4.0.14
+    ports:
+    - containerPort: 8989
+    env:
+    - name: PGID
+      value: "100"
+    - name: PUID
+      value: "1036"
+    - name: TZ
+      value: "Europe/Rome"
+    volumeMounts:
+    - name: config
+      mountPath: "/config"
+    - name: downloads
+      mountPath: "/downloads"
+    - name: tvseries
+      mountPath: "/tv"
+  volumes:
+  - name: config
+    persistentVolumeClaim:
+      claimName: sonarr-config-claim
+  - name: downloads
+    persistentVolumeClaim:
+      claimName: sonarr-downloads
+  - name: tvseries
+    persistentVolumeClaim:
+      claimName: sonarr-tvseries
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sonarr
+  namespace: downloaders
+spec:
+  selector:
+    app.kubernetes.io/name: sonarr
+  ports:   
+    - name: sonarr-8989
+      protocol: TCP
+      port: 8989
