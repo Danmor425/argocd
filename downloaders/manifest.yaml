@@ -166,6 +166,31 @@ spec:
       protocol: TCP
       port: 8112
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deluge-ingress
+  namespace: downloaders
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: deluge.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: deluge
+            port:
+              number: 8112
+  tls:
+  - hosts:
+    -  deluge.danmor.eu
+    secretName: deluge.danmor.eu-tls
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -313,6 +338,31 @@ spec:
     - name: sonarr-8989
       protocol: TCP
       port: 8989
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarr-ingress
+  namespace: downloaders
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: sonarr.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr
+            port:
+              number: 8989
+  tls:
+  - hosts:
+    -  sonarr.danmor.eu
+    secretName: sonarr.danmor.eu-tls
 ---
 apiVersion: v1
 kind: PersistentVolume
