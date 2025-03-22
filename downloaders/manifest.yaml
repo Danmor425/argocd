@@ -260,6 +260,31 @@ spec:
       protocol: TCP
       port: 9696
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prowlarr-ingress
+  namespace: downloaders
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: prowlarr.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              number: 8112
+  tls:
+  - hosts:
+    -  prowlarr.danmor.eu
+    secretName: prowlarr.danmor.eu-tls
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -442,3 +467,28 @@ spec:
     - name: radarr-7878
       protocol: TCP
       port: 7878
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: radarr-ingress
+  namespace: downloaders
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: radarr.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: radarr
+            port:
+              number: 8112
+  tls:
+  - hosts:
+    -  radarr.danmor.eu
+    secretName: radarr.danmor.eu-tls
