@@ -48,3 +48,10 @@ spec:
       value: "1036"
     - name: TZ
       value: "Europe/Rome"
+    volumeMounts:
+    - name: config
+      mountPath: "/config"
+  volumes:
+  - name: config
+    persistentVolumeClaim:
+      claimName: deluge-config-claim
