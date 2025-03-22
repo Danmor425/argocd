@@ -64,6 +64,35 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  name: movies
+  namespace: downloaders
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/volume1/movies/"
+    server: "192.168.10.51"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: movies-claim
+  namespace: downloaders
+spec:
+  volumeName: movies
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
   name: deluge-config
   namespace: downloaders
 spec:
@@ -284,3 +313,82 @@ spec:
     - name: sonarr-8989
       protocol: TCP
       port: 8989
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: radarr-config
+  namespace: downloaders
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/volume1/kube/config/radarr/"
+    server: "192.168.10.51"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-claim
+  namespace: downloaders
+spec:
+  volumeName: radarr-config
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: radarr
+  labels:
+    app.kubernetes.io/name: radarr
+spec:
+  containers:
+  - name: radarr
+    image: lscr.io/linuxserver/radarr:5.20.2
+    ports:
+    - containerPort: 7878
+    env:
+    - name: PGID
+      value: "100"
+    - name: PUID
+      value: "1036"
+    - name: TZ
+      value: "Europe/Rome"
+    volumeMounts:
+    - name: config
+      mountPath: "/config"
+    - name: downloads
+      mountPath: "/downloads"
+    - name: movies
+      mountPath: "/movies"
+  volumes:
+  - name: config
+    persistentVolumeClaim:
+      claimName: radarr-config-claim
+  - name: downloads
+    persistentVolumeClaim:
+      claimName: downloads-claim
+  - name: movies
+    persistentVolumeClaim:
+      claimName: movies-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: radarr
+  namespace: downloaders
+spec:
+  selector:
+    app.kubernetes.io/name: radarr
+  ports:   
+    - name: radarr-7878
+      protocol: TCP
+      port: 7878
