@@ -107,3 +107,72 @@ spec:
     - name: deluge-8112
       protocol: TCP
       port: 8112
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prowlarr-config
+  namespace: downloaders
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/volume1/kube/config/prowlarr/"
+    server: "192.168.10.51"
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prowlarr-config-claim
+  namespace: downloaders
+spec:
+  volumeName: prowlarr-config
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prowlarr
+  labels:
+    app.kubernetes.io/name: prowlarr
+spec:
+  containers:
+  - name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:1.32.2
+    ports:
+    - containerPort: 9696
+    env:
+    - name: PGID
+      value: "100"
+    - name: PUID
+      value: "1036"
+    - name: TZ
+      value: "Europe/Rome"
+    volumeMounts:
+    - name: config
+      mountPath: "/config"
+  volumes:
+  - name: config
+    persistentVolumeClaim:
+      claimName: prowlarr-config-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: prowlarr
+  namespace: downloaders
+spec:
+  selector:
+    app.kubernetes.io/name: prowlarr
+  ports:   
+    - name: prowlarr-9696
+      protocol: TCP
+      port: 9696
