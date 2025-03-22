@@ -48,45 +48,6 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: deluge
-  namespace: rp-ingress
-spec:
-  ports:   
-    - name: deluge-8112
-      protocol: TCP
-      port: 80
-      targetPort: 8112
-  type: ExternalName
-  externalName: 192.168.10.51
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: deluge-ingress
-  namespace: rp-ingress
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: deluge.danmor.eu 
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: deluge
-            port:
-              number: 8112
-  tls:
-  - hosts:
-    -  deluge.danmor.eu
-    secretName: deluge.danmor.eu-tls
----
-kind: Service
-apiVersion: v1
-metadata:
   name: drive
   namespace: rp-ingress
 spec:
@@ -197,44 +158,6 @@ spec:
   - hosts:
     -  hass.danmor.eu
     secretName: hass.danmor.eu-tls
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: sonarr
-  namespace: rp-ingress
-spec:
-  ports:   
-    - name: sonarr-8989
-      protocol: TCP
-      port: 8989
-  type: ExternalName
-  externalName: 192.168.10.51
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: sonarr-ingress
-  namespace: rp-ingress
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: sonarr.danmor.eu 
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: sonarr
-            port:
-              number: 8989
-  tls:
-  - hosts:
-    -  sonarr.danmor.eu
-    secretName: sonarr.danmor.eu-tls
 ---
 kind: Service
 apiVersion: v1
