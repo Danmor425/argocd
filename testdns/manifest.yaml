@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: dnsutils
-  namespace: default
+  namespace: rp-ingress
 spec:
   containers:
   - name: dnsutils
