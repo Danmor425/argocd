@@ -99,7 +99,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: "/volume1/kube/config/deluge/"
@@ -114,7 +114,7 @@ metadata:
 spec:
   volumeName: deluge-config
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
@@ -200,7 +200,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: "/volume1/kube/config/prowlarr/"
@@ -215,7 +215,7 @@ metadata:
 spec:
   volumeName: prowlarr-config
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
@@ -294,7 +294,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: "/volume1/kube/config/sonarr/"
@@ -309,7 +309,7 @@ metadata:
 spec:
   volumeName: sonarr-config
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
@@ -398,7 +398,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
     path: "/volume1/kube/config/radarr/"
@@ -413,7 +413,7 @@ metadata:
 spec:
   volumeName: radarr-config
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
