@@ -49,6 +49,19 @@ spec:
     readOnly: false
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tvseries-claim
+  namespace: downloaders
+spec:
+  volumeName: tvseries
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi
+---
+apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: deluge-config
@@ -223,19 +236,6 @@ spec:
       storage: 1Gi
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: sonarr-tvseries
-  namespace: downloaders
-spec:
-  volumeName: tvseries
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1000Gi
----
-apiVersion: v1
 kind: Pod
 metadata:
   name: sonarr
@@ -270,7 +270,7 @@ spec:
       claimName: downloads-claim
   - name: tvseries
     persistentVolumeClaim:
-      claimName: sonarr-tvseries
+      claimName: tvseries-claim
 ---
 kind: Service
 apiVersion: v1
