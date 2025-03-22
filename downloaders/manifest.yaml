@@ -4,6 +4,21 @@ metadata:
   name: downloaders
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: deluge-config
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/volume1/kube/config/deluge/"
+    server: "192.168.10.51"
+    readOnly: false
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: deluge
