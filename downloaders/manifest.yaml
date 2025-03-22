@@ -17,8 +17,8 @@ spec:
     - containerPort: 8112
     env:
     - name: PGID
-      value: 100
+      value: "100"
     - name: PUID
-      value: 1036
+      value: "1036"
     - name: TZ
       value: "Europe/Rome"
