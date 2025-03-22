@@ -506,10 +506,6 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: "/tmp/sonarr/"
-  nfs:
-    path: "/volume1/kube/config/sonarr/"
-    server: "192.168.10.51"
-    readOnly: false
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
