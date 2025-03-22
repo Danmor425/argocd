@@ -19,6 +19,17 @@ spec:
     readOnly: false
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: deluge-config-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: deluge
