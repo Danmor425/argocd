@@ -19,14 +19,14 @@ mountOptions:
    - discard
 ---
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
-  name: pvtest
+  name: rbd-pvc
 spec:
-  capacity:
-    storage: 1Gi
-  volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
   storageClassName: csi-rbd-sc
