@@ -22,7 +22,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: rbd-pvc
-  namespace: default
+  namespace: downloaders
 spec:
   accessModes:
     - ReadWriteOnce
