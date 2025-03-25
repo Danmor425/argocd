@@ -31,3 +31,21 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: csi-rbd-sc
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  labels:
+    app.kubernetes.io/name: busybox
+spec:
+  containers:
+  - name: busybox
+    image: busybox:latest
+    volumeMounts:
+    - name: ceph
+      mountPath: "/ceph"
+  volumes:
+  - name: ceph
+    persistentVolumeClaim:
+      claimName: rbd-pvc
