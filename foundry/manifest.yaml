@@ -31,7 +31,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: foundry-data-claim
-  namespace: downloaders
+  namespace: foundry
 spec:
   volumeName: foundry-data
   accessModes:
