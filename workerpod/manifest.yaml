@@ -60,9 +60,9 @@ spec:
     volumeMounts:
     - name: ceph
       mountPath: "/ceph"
+    command: ["tail"]
+    args: ["-f", "/dev/null"]
   volumes:
   - name: ceph
     persistentVolumeClaim:
       claimName: ceph-pers
-  command: ["tail"]
-  args: ["-f", "/dev/null"]
