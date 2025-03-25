@@ -49,3 +49,18 @@ spec:
   - name: ceph
     persistentVolumeClaim:
       claimName: rbd-pvc
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ceph-pv     
+spec:
+  storageClassName: csi-rbd-sc
+  capacity:
+    storage: 1Gi    
+  accessModes:
+    - ReadWriteOnce 
+  rbd:              
+    image: ceph-image
+    fsType: ext4        
+  persistentVolumeReclaimPolicy: Retain
