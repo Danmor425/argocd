@@ -60,7 +60,4 @@ spec:
     storage: 1Gi    
   accessModes:
     - ReadWriteOnce 
-  rbd:              
-    image: ceph-image
-    fsType: ext4        
   persistentVolumeReclaimPolicy: Retain
