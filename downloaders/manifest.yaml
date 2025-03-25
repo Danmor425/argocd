@@ -195,17 +195,31 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: prowlarr-config
-  namespace: downloaders
 spec:
+  accessModes:
+  - ReadWriteOnce
   capacity:
     storage: 1Gi
-  accessModes:
-    - ReadWriteMany
+  csi:
+    driver: rbd.csi.ceph.com
+    fsType: ext4
+    nodeStageSecretRef:
+      # node stage secret name
+      name: csi-rbd-secret
+      # node stage secret namespace where above secret is created
+      namespace: ceph-csi-rbd
+    volumeAttributes:
+      # Required options from storageclass parameters need to be added in volumeAttributes
+      "clusterID": "78be666a-2ee8-425a-81d4-c938372905d4"
+      "pool": "kube"
+      "staticVolume": "true"
+      "imageFeatures": "layering"
+      #mounter: rbd-nbd
+    # volumeHandle should be same as rbd image name
+    volumeHandle: prowlarr-config
   persistentVolumeReclaimPolicy: Retain
-  nfs:
-    path: "/volume1/kube/config/prowlarr/"
-    server: "192.168.10.51"
-    readOnly: false
+  # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
+  volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -215,7 +229,7 @@ metadata:
 spec:
   volumeName: prowlarr-config
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -298,21 +312,15 @@ spec:
     driver: rbd.csi.ceph.com
     fsType: ext4
     nodeStageSecretRef:
-      # node stage secret name
       name: csi-rbd-secret
-      # node stage secret namespace where above secret is created
       namespace: ceph-csi-rbd
     volumeAttributes:
-      # Required options from storageclass parameters need to be added in volumeAttributes
       "clusterID": "78be666a-2ee8-425a-81d4-c938372905d4"
       "pool": "kube"
       "staticVolume": "true"
       "imageFeatures": "layering"
-      #mounter: rbd-nbd
-    # volumeHandle should be same as rbd image name
     volumeHandle: sonarr-config
   persistentVolumeReclaimPolicy: Retain
-  # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
   volumeMode: Filesystem
 ---
 apiVersion: v1
@@ -407,17 +415,25 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: radarr-config
-  namespace: downloaders
 spec:
+  accessModes:
+  - ReadWriteOnce
   capacity:
     storage: 1Gi
-  accessModes:
-    - ReadWriteMany
+  csi:
+    driver: rbd.csi.ceph.com
+    fsType: ext4
+    nodeStageSecretRef:
+      name: csi-rbd-secret
+      namespace: ceph-csi-rbd
+    volumeAttributes:
+      "clusterID": "78be666a-2ee8-425a-81d4-c938372905d4"
+      "pool": "kube"
+      "staticVolume": "true"
+      "imageFeatures": "layering"
+    volumeHandle: radarr-config
   persistentVolumeReclaimPolicy: Retain
-  nfs:
-    path: "/volume1/kube/config/radarr/"
-    server: "192.168.10.51"
-    readOnly: false
+  volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -427,7 +443,7 @@ metadata:
 spec:
   volumeName: radarr-config
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
