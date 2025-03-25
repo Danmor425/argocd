@@ -606,7 +606,7 @@ metadata:
 spec:
   containers:
   - name: whp
-    image: hotio/whisparr:v3-3.0.0.909
+    image: hotio/whisparr:nightly-2.0.0.891
     ports:
     - containerPort: 6969
     env:
