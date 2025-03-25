@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foundry
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: foundry-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  csi:
+    driver: rbd.csi.ceph.com
+    fsType: ext4
+    nodeStageSecretRef:
+      name: csi-rbd-secret
+      namespace: ceph-csi-rbd
+    volumeAttributes:
+      "clusterID": "78be666a-2ee8-425a-81d4-c938372905d4"
+      "pool": "kube"
+      "staticVolume": "true"
+      "imageFeatures": "layering"
+    volumeHandle: foundry-data
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: foundry-data-claim
+  namespace: downloaders
+spec:
+  volumeName: foundry-data
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: foundry
+  labels:
+    app.kubernetes.io/name: foundry
+spec:
+  containers:
+  - name: foundry
+    image: felddy/foundryvtt:12.331.0
+    ports:
+    - containerPort: 30000
+    env:
+    - name: CONTAINER_PRESERVE_CONFIG
+      value: "true"
+    - name: CONTAINER_CACHE
+      value: "/data/install"
+    volumeMounts:
+    - name: data
+      mountPath: "/data"
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: foundry-data-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foundry
+  namespace: foundry
+spec:
+  selector:
+    app.kubernetes.io/name: foundry
+  ports:   
+    - name: foundry-30000
+      protocol: TCP
+      port: 30000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: foundry-ingress
+  namespace: foundry
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: foundry.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: foundry
+            port:
+              number: 30000
+  tls:
+  - hosts:
+    -  foundry.danmor.eu
+    secretName: foundry.danmor.eu-tls
