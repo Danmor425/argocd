@@ -52,13 +52,20 @@ spec:
 ---
 apiVersion: v1
 kind: PersistentVolume
-Type: CSI
 metadata:
-  name: ceph-pv     
+  name: ceph-pv
 spec:
-  storageClassName: csi-rbd-sc
   capacity:
-    storage: 1Gi    
+    storage: 1Gi
   accessModes:
-    - ReadWriteOnce 
+    - ReadWriteOnce
+  rbd:
+    monitors:
+      - 192.168.10.57:3300
+    pool: kube
+    image: ceph-image
+    secretRef:
+      name: csi-rbd-secret
+    fsType: ext4
+    readOnly: false
   persistentVolumeReclaimPolicy: Retain
