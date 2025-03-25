@@ -49,14 +49,14 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: busybox
+  name: alpine
   namespace: workerpod
   labels:
     app.kubernetes.io/name: busybox
 spec:
   containers:
-  - name: busybox
-    image: busybox:latest
+  - name: alpine
+    image: alpine:latest
     volumeMounts:
     - name: ceph
       mountPath: "/ceph"
