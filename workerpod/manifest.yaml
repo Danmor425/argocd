@@ -53,8 +53,6 @@ metadata:
   namespace: workerpod
   labels:
     app.kubernetes.io/name: busybox
-  command: ["tail"]
-  args: ["-f", "/dev/null"]
 spec:
   containers:
   - name: busybox
@@ -66,3 +64,5 @@ spec:
   - name: ceph
     persistentVolumeClaim:
       claimName: ceph-pers
+  command: ["tail"]
+  args: ["-f", "/dev/null"]
