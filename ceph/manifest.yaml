@@ -35,22 +35,32 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: ceph-pv
+  name: fs-static-pv
 spec:
+  accessModes:
+  - ReadWriteOnce
   capacity:
     storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  rbd:
-    monitors:
-      - 192.168.10.57:3300
-    pool: kube
-    image: ceph-image
-    secretRef:
-      name: csi-rbd-secret
+  csi:
+    driver: rbd.csi.ceph.com
     fsType: ext4
-    readOnly: false
+    nodeStageSecretRef:
+      # node stage secret name
+      name: csi-rbd-secret
+      # node stage secret namespace where above secret is created
+      namespace: ceph-csi-rbd
+    volumeAttributes:
+      # Required options from storageclass parameters need to be added in volumeAttributes
+      "clusterID": "78be666a-2ee8-425a-81d4-c938372905d4"
+      "pool": "kube"
+      "staticVolume": "true"
+      "imageFeatures": "layering"
+      #mounter: rbd-nbd
+    # volumeHandle should be same as rbd image name
+    volumeHandle: static-image
   persistentVolumeReclaimPolicy: Retain
+  # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
+  volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
