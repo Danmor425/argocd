@@ -33,24 +33,6 @@ spec:
   storageClassName: csi-rbd-sc
 ---
 apiVersion: v1
-kind: Pod
-metadata:
-  name: busybox
-  labels:
-    app.kubernetes.io/name: busybox
-spec:
-  containers:
-  - name: busybox
-    image: linuxserver/deluge:2.1.1
-    volumeMounts:
-    - name: ceph
-      mountPath: "/ceph"
-  volumes:
-  - name: ceph
-    persistentVolumeClaim:
-      claimName: rbd-pvc
----
-apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: ceph-pv
@@ -69,3 +51,31 @@ spec:
     fsType: ext4
     readOnly: false
   persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ceph-pers
+  namespace: downloaders
+spec:
+  volumeName: ceph-pv
+  accessModes:
+    - ReadWriteMany
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  labels:
+    app.kubernetes.io/name: busybox
+spec:
+  containers:
+  - name: busybox
+    image: linuxserver/deluge:2.1.1
+    volumeMounts:
+    - name: ceph
+      mountPath: "/ceph"
+  volumes:
+  - name: ceph
+    persistentVolumeClaim:
+      claimName: ceph-pers
