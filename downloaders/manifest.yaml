@@ -128,7 +128,7 @@ metadata:
 spec:
   volumeName: deluge-config
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
