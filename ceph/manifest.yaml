@@ -61,3 +61,4 @@ spec:
   accessModes:
     - ReadWriteOnce 
   persistentVolumeReclaimPolicy: Retain
+  FSType: ext4
