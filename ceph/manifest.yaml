@@ -68,8 +68,7 @@ metadata:
   name: ceph-pers
   namespace: downloaders
 spec:
-  volumeName: ceph-pv
-  provisioner: rbd.csi.ceph.com
+  volumeName: fs-static-pv
   accessModes:
     - ReadWriteOnce
   resources:
