@@ -59,6 +59,7 @@ metadata:
   namespace: downloaders
 spec:
   volumeName: ceph-pv
+  provisioner: rbd.csi.ceph.com
   accessModes:
     - ReadWriteOnce
   resources:
