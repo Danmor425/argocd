@@ -602,7 +602,7 @@ kind: Pod
 metadata:
   name: whp
   labels:
-    app.kubernetes.io/name: radarr
+    app.kubernetes.io/name: whp
 spec:
   containers:
   - name: whp
