@@ -52,6 +52,7 @@ spec:
 ---
 apiVersion: v1
 kind: PersistentVolume
+Type: CSI
 metadata:
   name: ceph-pv     
 spec:
@@ -61,4 +62,3 @@ spec:
   accessModes:
     - ReadWriteOnce 
   persistentVolumeReclaimPolicy: Retain
-  FSType: ext4
