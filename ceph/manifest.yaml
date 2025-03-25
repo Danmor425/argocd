@@ -78,4 +78,4 @@ spec:
   volumes:
   - name: ceph
     persistentVolumeClaim:
-      claimName: ceph-pers
+      claimName: rbd-pvc
