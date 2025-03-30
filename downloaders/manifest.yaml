@@ -183,7 +183,7 @@ metadata:
   namespace: downloaders
 spec:
   selector:
-    app.kubernetes.io/name: deluge
+    app: deluge
   ports:   
     - name: deluge-8112
       protocol: TCP
