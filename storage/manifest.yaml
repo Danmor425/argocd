@@ -57,6 +57,7 @@ metadata:
   namespace: prometheus
 spec:
   volumeName: prometheus-data
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
