@@ -133,39 +133,48 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: deluge
+  name: downloaders
   labels:
-    app.kubernetes.io/name: deluge
+    app: downloaders
 spec:
-  containers:
-  - name: deluge
-    image: linuxserver/deluge:2.1.1
-    ports:
-    - containerPort: 58846
-    - containerPort: 58946
-    - containerPort: 8112
-    env:
-    - name: PGID
-      value: "100"
-    - name: PUID
-      value: "1036"
-    - name: TZ
-      value: "Europe/Rome"
-    volumeMounts:
-    - name: config
-      mountPath: "/config"
-    - name: downloads
-      mountPath: "/downloads"
-  volumes:
-  - name: config
-    persistentVolumeClaim:
-      claimName: deluge-config-claim
-  - name: downloads
-    persistentVolumeClaim:
-      claimName: downloads-claim
+  replicas: 1
+  selector:
+    matchLabels:
+      app: downloaders
+  template:
+    metadata:
+      labels:
+        app: downloaders
+    spec:
+      containers:
+      - name: deluge
+        image: linuxserver/deluge:2.1.1
+        ports:
+        - containerPort: 58846
+        - containerPort: 58946
+        - containerPort: 8112
+        env:
+        - name: PGID
+          value: "100"
+        - name: PUID
+          value: "1036"
+        - name: TZ
+          value: "Europe/Rome"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+        - name: downloads
+          mountPath: "/downloads"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: deluge-config-claim
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads-claim
 ---
 kind: Service
 apiVersion: v1
