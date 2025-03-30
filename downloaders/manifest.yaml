@@ -251,32 +251,41 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: prowlarr
   labels:
-    app.kubernetes.io/name: prowlarr
+    app: prowlarr
 spec:
-  containers:
-  - name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:1.32.2
-    ports:
-    - containerPort: 9696
-    env:
-    - name: PGID
-      value: "100"
-    - name: PUID
-      value: "1036"
-    - name: TZ
-      value: "Europe/Rome"
-    volumeMounts:
-    - name: config
-      mountPath: "/config"
-  volumes:
-  - name: config
-    persistentVolumeClaim:
-      claimName: prowlarr-config-claim
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      containers:
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr:1.32.2
+        ports:
+        - containerPort: 9696
+        env:
+        - name: PGID
+          value: "100"
+        - name: PUID
+          value: "1036"
+        - name: TZ
+          value: "Europe/Rome"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: prowlarr-config-claim
 ---
 kind: Service
 apiVersion: v1
@@ -285,7 +294,7 @@ metadata:
   namespace: downloaders
 spec:
   selector:
-    app.kubernetes.io/name: prowlarr
+    app: prowlarr
   ports:   
     - name: prowlarr-9696
       protocol: TCP
@@ -353,42 +362,51 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: sonarr
   labels:
-    app.kubernetes.io/name: sonarr
+    app: sonarr
 spec:
-  containers:
-  - name: sonarr
-    image: lscr.io/linuxserver/sonarr:4.0.14
-    ports:
-    - containerPort: 8989
-    env:
-    - name: PGID
-      value: "100"
-    - name: PUID
-      value: "1036"
-    - name: TZ
-      value: "Europe/Rome"
-    volumeMounts:
-    - name: config
-      mountPath: "/config"
-    - name: downloads
-      mountPath: "/downloads"
-    - name: tvseries
-      mountPath: "/tv"
-  volumes:
-  - name: config
-    persistentVolumeClaim:
-      claimName: sonarr-config-claim
-  - name: downloads
-    persistentVolumeClaim:
-      claimName: downloads-claim
-  - name: tvseries
-    persistentVolumeClaim:
-      claimName: tvseries-claim
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:4.0.14
+        ports:
+        - containerPort: 8989
+        env:
+        - name: PGID
+          value: "100"
+        - name: PUID
+          value: "1036"
+        - name: TZ
+          value: "Europe/Rome"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+        - name: downloads
+          mountPath: "/downloads"
+        - name: tvseries
+          mountPath: "/tv"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: sonarr-config-claim
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads-claim
+      - name: tvseries
+        persistentVolumeClaim:
+          claimName: tvseries-claim
 ---
 kind: Service
 apiVersion: v1
@@ -397,7 +415,7 @@ metadata:
   namespace: downloaders
 spec:
   selector:
-    app.kubernetes.io/name: sonarr
+    app: sonarr
   ports:   
     - name: sonarr-8989
       protocol: TCP
@@ -465,42 +483,51 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: radarr
   labels:
-    app.kubernetes.io/name: radarr
+    app: radarr
 spec:
-  containers:
-  - name: radarr
-    image: lscr.io/linuxserver/radarr:5.20.2
-    ports:
-    - containerPort: 7878
-    env:
-    - name: PGID
-      value: "100"
-    - name: PUID
-      value: "1036"
-    - name: TZ
-      value: "Europe/Rome"
-    volumeMounts:
-    - name: config
-      mountPath: "/config"
-    - name: downloads
-      mountPath: "/downloads"
-    - name: movies
-      mountPath: "/movies"
-  volumes:
-  - name: config
-    persistentVolumeClaim:
-      claimName: radarr-config-claim
-  - name: downloads
-    persistentVolumeClaim:
-      claimName: downloads-claim
-  - name: movies
-    persistentVolumeClaim:
-      claimName: movies-claim
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+      - name: radarr
+        image: lscr.io/linuxserver/radarr:5.20.2
+        ports:
+        - containerPort: 7878
+        env:
+        - name: PGID
+          value: "100"
+        - name: PUID
+          value: "1036"
+        - name: TZ
+          value: "Europe/Rome"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+        - name: downloads
+          mountPath: "/downloads"
+        - name: movies
+          mountPath: "/movies"
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: radarr-config-claim
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads-claim
+      - name: movies
+        persistentVolumeClaim:
+          claimName: movies-claim
 ---
 kind: Service
 apiVersion: v1
@@ -509,7 +536,7 @@ metadata:
   namespace: downloaders
 spec:
   selector:
-    app.kubernetes.io/name: radarr
+    app: radarr
   ports:   
     - name: radarr-7878
       protocol: TCP
