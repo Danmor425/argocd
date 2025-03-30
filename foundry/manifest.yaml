@@ -40,30 +40,39 @@ spec:
     requests:
       storage: 10Gi
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: foundry
   labels:
-    app.kubernetes.io/name: foundry
+    app: foundry
 spec:
-  containers:
-  - name: foundry
-    image: felddy/foundryvtt:12.331.0
-    ports:
-    - containerPort: 30000
-    env:
-    - name: CONTAINER_PRESERVE_CONFIG
-      value: "true"
-    - name: CONTAINER_CACHE
-      value: "/data/install"
-    volumeMounts:
-    - name: data
-      mountPath: "/data"
-  volumes:
-  - name: data
-    persistentVolumeClaim:
-      claimName: foundry-data-claim
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foundry
+  template:
+    metadata:
+      labels:
+        app: foundry
+    spec:
+      containers:
+      - name: foundry
+        image: felddy/foundryvtt:12.331.0
+        ports:
+        - containerPort: 30000
+        env:
+        - name: CONTAINER_PRESERVE_CONFIG
+          value: "true"
+        - name: CONTAINER_CACHE
+          value: "/data/install"
+        volumeMounts:
+        - name: data
+          mountPath: "/data"
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: foundry-data-claim
 ---
 kind: Service
 apiVersion: v1
@@ -72,7 +81,7 @@ metadata:
   namespace: foundry
 spec:
   selector:
-    app.kubernetes.io/name: foundry
+    app: foundry
   ports:   
     - name: foundry-30000
       protocol: TCP
