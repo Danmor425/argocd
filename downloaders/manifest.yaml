@@ -136,18 +136,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: downloaders
+  name: deluge
   labels:
-    app: downloaders
+    app: deluge
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: downloaders
+      app: deluge
   template:
     metadata:
       labels:
-        app: downloaders
+        app: deluge
     spec:
       containers:
       - name: deluge
