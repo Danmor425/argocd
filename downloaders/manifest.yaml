@@ -134,7 +134,7 @@ spec:
       storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: deluge
   labels:
@@ -252,7 +252,7 @@ spec:
       storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: prowlarr
   labels:
@@ -363,7 +363,7 @@ spec:
       storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: sonarr
   labels:
@@ -484,7 +484,7 @@ spec:
       storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: radarr
   labels:
