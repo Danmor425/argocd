@@ -141,6 +141,7 @@ metadata:
     app: deluge
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: deluge
@@ -259,6 +260,7 @@ metadata:
     app: prowlarr
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: prowlarr
@@ -370,6 +372,7 @@ metadata:
     app: sonarr
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: sonarr
@@ -491,6 +494,7 @@ metadata:
     app: radarr
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: radarr
