@@ -240,3 +240,28 @@ spec:
                 name: grafana
                 port:
                   number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plex-ingress
+  namespace: plex
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: plex.danmor.eu 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: plex-plex-media-server
+            port:
+              number: 32400
+  tls:
+  - hosts:
+    -  plex.danmor.eu
+    secretName: plex.danmor.eu-tls
