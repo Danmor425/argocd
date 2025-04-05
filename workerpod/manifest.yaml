@@ -40,7 +40,7 @@ metadata:
   namespace: workerpod
 spec:
   volumeName: fs-static-pv
-  storageClass: ""
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
