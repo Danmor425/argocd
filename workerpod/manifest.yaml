@@ -28,7 +28,7 @@ spec:
       "imageFeatures": "layering"
       #mounter: rbd-nbd
     # volumeHandle should be same as rbd image name
-    volumeHandle: foundry-data
+    volumeHandle: plex-data
   persistentVolumeReclaimPolicy: Retain
   # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
   volumeMode: Filesystem
