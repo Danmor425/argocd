@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hass
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hass-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  csi:
+    driver: rbd.csi.ceph.com
+    fsType: ext4
+    nodeStageSecretRef:
+      # node stage secret name
+      name: csi-rbd-secret
+      # node stage secret namespace where above secret is created
+      namespace: ceph-csi-rbd
+    volumeAttributes:
+      # Required options from storageclass parameters need to be added in volumeAttributes
+      "clusterID": "78be666a-2ee8-425a-81d4-c938372905d4"
+      "pool": "kube"
+      "staticVolume": "true"
+      "imageFeatures": "layering"
+      #mounter: rbd-nbd
+    # volumeHandle should be same as rbd image name
+    volumeHandle: hass-data
+  persistentVolumeReclaimPolicy: Retain
+  # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hass-data-claim
+  namespace: hass
+spec:
+  volumeName: hass-data
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hass
+  labels:
+    app: hass
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: hass
+  template:
+    metadata:
+      labels:
+        app: hass
+    spec:
+      containers:
+      - name: hass
+        image: homeassistant/home-assistant:2025.4.1
+        ports:
+        - containerPort: 8123
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+        - name: downloads
+          mountPath: "/downloads"
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: hass-data-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hass
+  namespace: hass
+spec:
+  selector:
+    app: hass
+  ports:   
+    - name: hass-8123
+      protocol: TCP
+      port: 8123
