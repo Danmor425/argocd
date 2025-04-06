@@ -87,11 +87,11 @@ spec:
       labels:
         app: hass
     spec:
+      securityContext:
+        privileged: true
       hostNetwork: true
       containers:
       - name: hass
-        securityContext:
-          privileged: true
         image: homeassistant/home-assistant:2025.4.1
         ports:
         - containerPort: 8123
