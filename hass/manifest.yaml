@@ -27,7 +27,7 @@ data:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: hass-data
+  name: hass-config
 spec:
   accessModes:
   - ReadWriteOnce
@@ -49,7 +49,7 @@ spec:
       "imageFeatures": "layering"
       #mounter: rbd-nbd
     # volumeHandle should be same as rbd image name
-    volumeHandle: hass-data
+    volumeHandle: hass-config
   persistentVolumeReclaimPolicy: Retain
   # The volumeMode can be either `Filesystem` or `Block` if you are creating Filesystem PVC it should be `Filesystem`, if you are creating Block PV you need to change it to `Block`
   volumeMode: Filesystem
@@ -57,10 +57,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hass-data-claim
+  name: hass-config-claim
   namespace: hass
 spec:
-  volumeName: hass-data
+  volumeName: hass-config
   storageClassName: ""
   accessModes:
     - ReadWriteOnce
@@ -91,12 +91,27 @@ spec:
         ports:
         - containerPort: 8123
         volumeMounts:
-        - name: data
-          mountPath: "/data"
+          - mountPath: /config
+            name: config
+          - mountPath: /config/configuration.yaml
+            subPath: configuration.yaml
+            name: configmap-file
+          - mountPath: /config/automations.yaml
+            subPath: automations.yaml
+            name: configmap-file
+          - mountPath: /config/scenes.yaml
+            subPath: scenes.yaml
+            name: configmap-file
+          - mountPath: /config/scripts.yaml
+            subPath: scripts.yaml
+            name: configmap-file
       volumes:
-      - name: data
+      - name: config
         persistentVolumeClaim:
-          claimName: hass-data-claim
+          claimName: hass-config-claim
+      - name: configmap-file
+        configMap:
+          name: hass
 ---
 kind: Service
 apiVersion: v1
