@@ -40,6 +40,7 @@ metadata:
   namespace: hass
 spec:
   volumeName: hass-data
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
