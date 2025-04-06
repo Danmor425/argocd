@@ -76,6 +76,7 @@ metadata:
   name: hass
   labels:
     app: hass
+    pod-security.kubernetes.io/enforce: privileged
 spec:
   replicas: 1
   revisionHistoryLimit: 0
@@ -87,8 +88,6 @@ spec:
       labels:
         app: hass
     spec:
-      securityContext:
-        privileged: true
       hostNetwork: true
       containers:
       - name: hass
