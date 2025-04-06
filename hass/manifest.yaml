@@ -90,7 +90,8 @@ spec:
       hostNetwork: true
       containers:
       - name: hass
-        privileged: true
+        securityContext:
+          privileged: true
         image: homeassistant/home-assistant:2025.4.1
         ports:
         - containerPort: 8123
