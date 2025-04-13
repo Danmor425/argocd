@@ -54,7 +54,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: prometheus-data-claim
-  namespace: prometheus
+  namespace: kube-prometheus-stack
 spec:
   volumeName: prometheus-data
   storageClassName: ""
@@ -200,7 +200,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: grafana-data-claim
-  namespace: kube-prometheus-claim
+  namespace: kube-prometheus-stack
 spec:
   volumeName: grafana-data
   storageClassName: ""
