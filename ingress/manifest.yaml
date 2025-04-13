@@ -17,7 +17,7 @@ spec:
       protocol: TCP
       port: 5001       
   type: ExternalName
-  externalName: 192.168.10.51
+  externalName: ds.danmor.eu
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -56,7 +56,7 @@ spec:
       protocol: TCP
       port: 443
   type: ExternalName
-  externalName: 192.168.10.51
+  externalName: ds.danmor.eu
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -95,7 +95,7 @@ spec:
       protocol: TCP
       port: 8123
   type: ExternalName
-  externalName: 192.168.10.55
+  externalName: ha.danmor.eu
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -133,7 +133,7 @@ spec:
       protocol: TCP
       port: 443
   type: ExternalName
-  externalName: 192.168.10.1
+  externalName: udm.danmor.eu
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -172,7 +172,7 @@ spec:
       protocol: TCP
       port: 8443
   type: ExternalName
-  externalName: 192.168.10.51
+  externalName: ds.danmor.eu
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
